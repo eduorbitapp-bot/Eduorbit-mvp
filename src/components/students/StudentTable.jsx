@@ -1,31 +1,36 @@
 export default function StudentTable({
   students,
+  onEdit,
   onDelete,
 }) {
+  if (students.length === 0) {
+    return (
+      <div className="card">
+        <p style={{ textAlign: "center" }}>
+          No Students Found
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <table className="student-table">
-
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Class</th>
-          <th>Phone</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-
-      <tbody>
-
-        {students.length === 0 ? (
+    <div
+      className="card"
+      style={{ overflowX: "auto" }}
+    >
+      <table className="teacher-table">
+        <thead>
           <tr>
-            <td colSpan="4" className="empty-state">
-              No Students Found
-            </td>
+            <th>Name</th>
+            <th>Class</th>
+            <th>Phone</th>
+            <th width="180">Action</th>
           </tr>
-        ) : (
-          students.map((student) => (
-            <tr key={student.id}>
+        </thead>
 
+        <tbody>
+          {students.map((student) => (
+            <tr key={student.id}>
               <td>{student.name}</td>
 
               <td>{student.class}</td>
@@ -34,19 +39,27 @@ export default function StudentTable({
 
               <td>
                 <button
+                  style={{
+                    marginRight: 8,
+                  }}
+                  onClick={() => onEdit(student)}
+                >
+                  Edit
+                </button>
+
+                <button
                   className="delete-btn"
-                  onClick={() => onDelete(student.id)}
+                  onClick={() =>
+                    onDelete(student.id)
+                  }
                 >
                   Delete
                 </button>
               </td>
-
             </tr>
-          ))
-        )}
-
-      </tbody>
-
-    </table>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }

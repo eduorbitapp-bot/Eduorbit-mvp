@@ -1,4 +1,8 @@
 import { Routes, Route, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useAuth } from "./context/AuthContext";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
+
 import "./App.css";
 
 import Dashboard from "./pages/Dashboard";
@@ -12,19 +16,46 @@ import Settings from "./pages/settings/Settings";
 
 function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  function handleLogin() {
+    const ok = login(email, password);
+
+    if (ok) {
+      navigate("/dashboard");
+    } else {
+      alert("Invalid Email or Password");
+    }
+  }
 
   return (
     <div className="login-page">
       <div className="login-card">
+
         <h1>EduOrbit</h1>
         <p>Education Management Platform</p>
 
-        <input type="text" placeholder="Email" />
-        <input type="password" placeholder="Password" />
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
-        <button onClick={() => navigate("/dashboard")}>
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+
+        <button onClick={handleLogin}>
           Login
         </button>
+
       </div>
     </div>
   );
@@ -33,15 +64,81 @@ function Login() {
 export default function App() {
   return (
     <Routes>
+
       <Route path="/" element={<Login />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/students" element={<Students />} />
-      <Route path="/teachers" element={<Teachers />} />
-      <Route path="/courses" element={<Courses />} />
-      <Route path="/attendance" element={<Attendance />} />
-      <Route path="/fees" element={<Fees />} />
-      <Route path="/exams" element={<Exams />} />
-      <Route path="/settings" element={<Settings />} />
+
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/students"
+        element={
+          <ProtectedRoute>
+            <Students />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/teachers"
+        element={
+          <ProtectedRoute>
+            <Teachers />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/courses"
+        element={
+          <ProtectedRoute>
+            <Courses />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/attendance"
+        element={
+          <ProtectedRoute>
+            <Attendance />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/fees"
+        element={
+          <ProtectedRoute>
+            <Fees />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/exams"
+        element={
+          <ProtectedRoute>
+            <Exams />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/settings"
+        element={
+          <ProtectedRoute>
+            <Settings />
+          </ProtectedRoute>
+        }
+      />
+
     </Routes>
   );
 }
