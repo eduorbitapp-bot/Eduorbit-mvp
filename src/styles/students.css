@@ -1,0 +1,124 @@
+*{
+  box-sizing:border-box;
+}
+
+.student-form{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:16px;
+  margin-bottom:24px;
+  padding:20px;
+  background:#ffffff;
+  border-radius:16px;
+  box-shadow:0 8px 24px rgba(15,23,42,.08);
+}
+
+.student-form input{
+  width:100%;
+  padding:12px 14px;
+  border:1px solid #d1d5db;
+  border-radius:10px;
+  font-size:15px;
+  outline:none;
+  transition:.2s;
+}
+
+.student-form input:focus{
+  border-color:#2563eb;
+  box-shadow:0 0 0 3px rgba(37,99,235,.15);
+}
+
+.student-form button{
+  background:#2563eb;
+  color:#fff;
+  border:none;
+  border-radius:10px;
+  padding:12px;
+  font-size:15px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.student-form button:hover{
+  background:#1d4ed8;
+}
+
+.student-search{
+  width:100%;
+  padding:12px 14px;
+  border:1px solid #d1d5db;
+  border-radius:10px;
+  margin-bottom:20px;
+  font-size:15px;
+}
+
+.student-table{
+  width:100%;
+  border-collapse:collapse;
+  background:#fff;
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 8px 24px rgba(15,23,42,.08);
+}
+.student-table thead{
+  background:#2563eb;
+  color:#fff;
+}
+
+.student-table th{
+  padding:14px;
+  text-align:left;
+  font-weight:600;
+}
+
+.student-table td{
+  padding:14px;
+  border-bottom:1px solid #e5e7eb;
+}
+
+.student-table tbody tr:hover{
+  background:#f8fafc;
+}
+
+.delete-btn{
+  background:#ef4444;
+  color:#fff;
+  border:none;
+  border-radius:8px;
+  padding:8px 14px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.delete-btn:hover{
+  background:#dc2626;
+}
+
+.empty-state{
+  text-align:center;
+  padding:40px;
+  color:#6b7280;
+}
+
+@media (max-width:768px){
+
+  .student-form{
+    grid-template-columns:1fr;
+    padding:16px;
+  }
+
+  .student-search{
+    font-size:14px;
+  }
+
+  .student-table{
+    display:block;
+    overflow-x:auto;
+    white-space:nowrap;
+  }
+
+  .student-table th,
+  .student-table td{
+    padding:12px;
+  }
+}
