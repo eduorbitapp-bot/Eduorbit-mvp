@@ -1,5 +1,6 @@
 export default function StudentTable({
   students,
+  onView,
   onEdit,
   onDelete,
 }) {
@@ -21,17 +22,46 @@ export default function StudentTable({
       <table className="teacher-table">
         <thead>
           <tr>
-            <th>Name</th>
+            <th>Student</th>
             <th>Class</th>
             <th>Phone</th>
-            <th width="180">Action</th>
+            <th>Action</th>
           </tr>
         </thead>
 
         <tbody>
           {students.map((student) => (
             <tr key={student.id}>
-              <td>{student.name}</td>
+
+              <td>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 10,
+                  }}
+                >
+                  <div
+                    style={{
+                      width: 38,
+                      height: 38,
+                      borderRadius: "50%",
+                      background: "#2563eb",
+                      color: "#fff",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontWeight: "700",
+                    }}
+                  >
+                    {student.name
+                      ?.charAt(0)
+                      ?.toUpperCase()}
+                  </div>
+
+                  <strong>{student.name}</strong>
+                </div>
+              </td>
 
               <td>{student.class}</td>
 
@@ -39,10 +69,15 @@ export default function StudentTable({
 
               <td>
                 <button
-                  style={{
-                    marginRight: 8,
-                  }}
+                  onClick={() => onView(student)}
+                  style={{ marginRight: 8 }}
+                >
+                  View
+                </button>
+
+                <button
                   onClick={() => onEdit(student)}
+                  style={{ marginRight: 8 }}
                 >
                   Edit
                 </button>
@@ -56,6 +91,7 @@ export default function StudentTable({
                   Delete
                 </button>
               </td>
+
             </tr>
           ))}
         </tbody>

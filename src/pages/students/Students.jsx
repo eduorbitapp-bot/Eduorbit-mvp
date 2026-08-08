@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import Sidebar from "../../components/Sidebar";
 import Topbar from "../../components/Topbar";
+import StudentForm from "../../components/students/StudentForm";
 import StudentTable from "../../components/students/StudentTable";
 import EditStudentModal from "../../components/students/EditStudentModal";
+import StudentProfile from "../../components/students/StudentProfile";
 
 export default function Students() {
   const [students, setStudents] = useState(() => {
@@ -13,125 +15,78 @@ export default function Students() {
     }
   });
 
-  const [name, setName] = useState("");
-  const [studentClass, setStudentClass] = useState("");
-  const [phone, setPhone] = useState("");
   const [search, setSearch] = useState("");
-
   const [editing, setEditing] = useState(null);
-  const [openModal, setOpenModal] = useState(false);
+  const [viewing, setViewing] = useState(null);
+
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [openProfile, setOpenProfile] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem(
-      "students",
-      JSON.stringify(students)
-    );
+    localStorage.setItem("students", JSON.stringify(students));
   }, [students]);
 
-  function addStudent() {
-    if (!name || !studentClass || !phone) {
-      alert("Fill all fields");
-      return;
-    }
-
-    setStudents((prev) => [
-      ...prev,
-      {
-        id: Date.now(),
-        name,
-        class: studentClass,
-        phone,
-      },
-    ]);
-
-    setName("");
-    setStudentClass("");
-    setPhone("");
+  function addStudent(newStudent) {
+    setStudents((prev) => [...prev, newStudent]);
   }
 
   function deleteStudent(id) {
-    if (!confirm("Delete Student?")) return;
+    if (!window.confirm("Delete Student?")) {
+      return;
+    }
 
     setStudents((prev) =>
-      prev.filter((s) => s.id !== id)
+      prev.filter((student) => student.id !== id)
     );
+
+    if (viewing?.id === id) {
+      setViewing(null);
+      setOpenProfile(false);
+    }
   }
 
   function editStudent(student) {
     setEditing(student);
-    setOpenModal(true);
+    setOpenEditModal(true);
   }
 
   function saveStudent(updatedStudent) {
     setStudents((prev) =>
-      prev.map((s) =>
-        s.id === updatedStudent.id
+      prev.map((student) =>
+        student.id === updatedStudent.id
           ? updatedStudent
-          : s
+          : student
       )
     );
 
-    setOpenModal(false);
+    setOpenEditModal(false);
     setEditing(null);
   }
 
-  const filtered = students.filter((s) =>
-    s.name
+  function viewStudent(student) {
+    setViewing(student);
+    setOpenProfile(true);
+  }
+
+  const filtered = students.filter((student) =>
+    `${student.name} ${student.class} ${student.section || ""}`
       .toLowerCase()
       .includes(search.toLowerCase())
   );
 
   return (
     <div className="dashboard">
-
       <Sidebar />
 
       <main className="main">
-
         <Topbar />
 
-        <div className="card">
-
-          <h2>Students</h2>
-
-          <input
-            placeholder="Student Name"
-            value={name}
-            onChange={(e) =>
-              setName(e.target.value)
-            }
-          />
-
-          <input
-            placeholder="Class"
-            value={studentClass}
-            onChange={(e) =>
-              setStudentClass(e.target.value)
-            }
-          />
-
-          <input
-            placeholder="Phone"
-            value={phone}
-            onChange={(e) =>
-              setPhone(e.target.value)
-            }
-          />
-
-          <button
-            onClick={addStudent}
-            style={{ marginTop: 10 }}
-          >
-            Add Student
-          </button>
-
-        </div>
+        <StudentForm onAdd={addStudent} />
 
         <div
           className="card"
           style={{ marginTop: 20 }}
         >
-
           <input
             placeholder="Search Student..."
             value={search}
@@ -139,31 +94,39 @@ export default function Students() {
               setSearch(e.target.value)
             }
           />
-
         </div>
 
         <div style={{ marginTop: 20 }}>
-
           <StudentTable
             students={filtered}
+            onView={viewStudent}
             onEdit={editStudent}
             onDelete={deleteStudent}
           />
-
         </div>
 
-        <EditStudentModal
-          open={openModal}
-          student={editing}
-          onSave={saveStudent}
-          onClose={() => {
-            setOpenModal(false);
-            setEditing(null);
-          }}
-        />
+        {openEditModal && (
+          <EditStudentModal
+            open={openEditModal}
+            student={editing}
+            onSave={saveStudent}
+            onClose={() => {
+              setOpenEditModal(false);
+              setEditing(null);
+            }}
+          />
+        )}
 
+        {openProfile && (
+          <StudentProfile
+            student={viewing}
+            onClose={() => {
+              setOpenProfile(false);
+              setViewing(null);
+            }}
+          />
+        )}
       </main>
-
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useAuth } from "./context/AuthContext";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 
+import "./styles/students.css";
 import "./App.css";
 
 import Dashboard from "./pages/Dashboard";
