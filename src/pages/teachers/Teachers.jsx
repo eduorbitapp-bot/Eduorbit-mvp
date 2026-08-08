@@ -1,22 +1,34 @@
 import { useEffect, useState } from "react";
 import Sidebar from "../../components/Sidebar";
 import Topbar from "../../components/Topbar";
+import TeacherForm from "../../components/teachers/TeacherForm";
+import TeacherTable from "../../components/teachers/TeacherTable";
+import TeacherProfile from "../../components/teachers/TeacherProfile";
+import EditTeacherModal from "../../components/teachers/EditTeacherModal";
 import "../../styles/teachers.css";
 
 export default function Teachers() {
-
   const [teachers, setTeachers] = useState(() => {
     try {
-      return JSON.parse(localStorage.getItem("teachers")) || [];
+      return (
+        JSON.parse(
+          localStorage.getItem("teachers")
+        ) || []
+      );
     } catch {
       return [];
     }
   });
 
-  const [name, setName] = useState("");
-  const [subject, setSubject] = useState("");
-  const [phone, setPhone] = useState("");
   const [search, setSearch] = useState("");
+  const [viewing, setViewing] = useState(null);
+  const [editing, setEditing] = useState(null);
+
+  const [openProfile, setOpenProfile] =
+    useState(false);
+
+  const [openEditModal, setOpenEditModal] =
+    useState(false);
 
   useEffect(() => {
     localStorage.setItem(
@@ -25,42 +37,58 @@ export default function Teachers() {
     );
   }, [teachers]);
 
-  function addTeacher() {
-
-    if (
-      !name.trim() ||
-      !subject.trim() ||
-      !phone.trim()
-    ) {
-      alert("Fill all fields");
-      return;
-    }
-
-    setTeachers(prev => [
+  function addTeacher(newTeacher) {
+    setTeachers((prev) => [
       ...prev,
-      {
-        id: Date.now(),
-        name,
-        subject,
-        phone,
-      }
+      newTeacher,
     ]);
-
-    setName("");
-    setSubject("");
-    setPhone("");
   }
 
   function deleteTeacher(id) {
-    if (!confirm("Delete Teacher?")) return;
+    if (!window.confirm("Delete Teacher?")) {
+      return;
+    }
 
-    setTeachers(prev =>
-      prev.filter(t => t.id !== id)
+    setTeachers((prev) =>
+      prev.filter((teacher) => teacher.id !== id)
     );
+
+    if (viewing?.id === id) {
+      setViewing(null);
+      setOpenProfile(false);
+    }
   }
 
-  const filtered = teachers.filter(t =>
-    t.name
+  function viewTeacher(teacher) {
+    setViewing(teacher);
+    setOpenProfile(true);
+  }
+
+  function editTeacher(teacher) {
+    setEditing(teacher);
+    setOpenEditModal(true);
+  }
+
+  function saveTeacher(updatedTeacher) {
+    setTeachers((prev) =>
+      prev.map((teacher) =>
+        teacher.id === updatedTeacher.id
+          ? {
+              ...teacher,
+              ...updatedTeacher,
+            }
+          : teacher
+      )
+    );
+
+    setOpenEditModal(false);
+    setEditing(null);
+  }
+
+  const filtered = teachers.filter((teacher) =>
+    `${teacher.name || ""} ${
+      teacher.subject || ""
+    }`
       .toLowerCase()
       .includes(search.toLowerCase())
   );
@@ -75,8 +103,12 @@ export default function Teachers() {
         <Topbar />
 
         <div className="teachers-header">
-
-          <h2>Teachers</h2>
+          <div>
+            <h2>Teachers</h2>
+            <p>
+              Manage teachers and faculty profiles
+            </p>
+          </div>
 
           <input
             className="teacher-search"
@@ -86,105 +118,43 @@ export default function Teachers() {
               setSearch(e.target.value)
             }
           />
-
         </div>
 
-        <div className="teacher-form">
+        <TeacherForm
+          onAdd={addTeacher}
+        />
 
-          <input
-            placeholder="Teacher Name"
-            value={name}
-            onChange={(e)=>
-              setName(e.target.value)
-            }
+        <TeacherTable
+          teachers={filtered}
+          onView={viewTeacher}
+          onEdit={editTeacher}
+          onDelete={deleteTeacher}
+        />
+
+        {openProfile && (
+          <TeacherProfile
+            teacher={viewing}
+            onClose={() => {
+              setOpenProfile(false);
+              setViewing(null);
+            }}
           />
+        )}
 
-          <input
-            placeholder="Subject"
-            value={subject}
-            onChange={(e)=>
-              setSubject(e.target.value)
-            }
+        {openEditModal && (
+          <EditTeacherModal
+            open={openEditModal}
+            teacher={editing}
+            onSave={saveTeacher}
+            onClose={() => {
+              setOpenEditModal(false);
+              setEditing(null);
+            }}
           />
-
-          <input
-            placeholder="Phone"
-            value={phone}
-            onChange={(e)=>
-              setPhone(e.target.value)
-            }
-          />
-
-          <button onClick={addTeacher}>
-            Add Teacher
-          </button>
-
-        </div>
-
-        <table className="teacher-table">
-
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Subject</th>
-              <th>Phone</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {filtered.length === 0 ? (
-
-              <tr>
-                <td
-                  colSpan="4"
-                  style={{
-                    textAlign: "center",
-                    padding: "20px",
-                  }}
-                >
-                  No Teachers Found
-                </td>
-              </tr>
-
-            ) : (
-
-              filtered.map((teacher) => (
-
-                <tr key={teacher.id}>
-
-                  <td>{teacher.name}</td>
-
-                  <td>{teacher.subject}</td>
-
-                  <td>{teacher.phone}</td>
-
-                  <td>
-
-                    <button
-                      className="delete-btn"
-                      onClick={() =>
-                        deleteTeacher(teacher.id)
-                      }
-                    >
-                      Delete
-                    </button>
-
-                  </td>
-
-                </tr>
-
-              ))
-
-            )}
-
-          </tbody>
-
-        </table>
+        )}
 
       </main>
 
     </div>
   );
-
 }

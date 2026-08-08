@@ -264,3 +264,119 @@
     width:calc(100vw - 24px);
   }
 }
+
+/* ========================================
+   STUDENT FORM GRID - PRODUCTION RESPONSIVE
+======================================== */
+
+.student-form{
+  width:100%;
+  grid-template-columns:1fr;
+}
+
+.student-form h2{
+  grid-column:1 / -1;
+  margin:0;
+  color:#111827;
+}
+
+.student-form .form-grid{
+  width:100%;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+}
+
+.student-form .form-grid input,
+.student-form .form-grid select,
+.student-form .form-grid label{
+  width:100%;
+  min-width:0;
+}
+
+.student-form .form-grid input,
+.student-form .form-grid select{
+  padding:12px 14px;
+  border:1px solid #d1d5db;
+  border-radius:10px;
+  font-size:15px;
+  background:#fff;
+  color:#111827;
+  outline:none;
+}
+
+.student-form .form-grid input:focus,
+.student-form .form-grid select:focus{
+  border-color:#2563eb;
+  box-shadow:0 0 0 3px rgba(37,99,235,.12);
+}
+
+.student-form .form-grid label{
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  color:#64748b;
+  font-size:13px;
+}
+
+.student-form > textarea{
+  grid-column:1 / -1;
+  width:100%;
+  min-width:0;
+  padding:12px 14px;
+  border:1px solid #d1d5db;
+  border-radius:10px;
+  font-size:15px;
+  resize:vertical;
+  outline:none;
+}
+
+.student-form > textarea:focus{
+  border-color:#2563eb;
+  box-shadow:0 0 0 3px rgba(37,99,235,.12);
+}
+
+.student-form > button[type="submit"]{
+  grid-column:1 / -1;
+  width:220px;
+  max-width:100%;
+  justify-self:start;
+  padding:12px 20px;
+}
+
+@media(max-width:900px){
+  .student-form .form-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+
+@media(max-width:768px){
+
+  .student-form{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:12px;
+    padding:16px;
+  }
+
+  .student-form .form-grid{
+    grid-template-columns:1fr;
+    gap:10px;
+  }
+
+  .student-form .form-grid input,
+  .student-form .form-grid select,
+  .student-form .form-grid label{
+    width:100%;
+  }
+
+  .student-form > textarea{
+    width:100%;
+    min-height:90px;
+  }
+
+  .student-form > button[type="submit"]{
+    width:100%;
+    justify-self:stretch;
+  }
+}
