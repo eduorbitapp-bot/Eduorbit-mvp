@@ -1,8 +1,12 @@
 import { studentEducation } from "../../data/studentEducation";
 import { studentProgress } from "../../data/studentProgress";
 import { studentTopics } from "../../data/studentTopics";
+import { getLearningActions } from "../../data/learningActions";
+
 import { buildLearningPlan } from "../../data/learningPlan";
   const learningPlan = buildLearningPlan();
+
+const learningActions = getLearningActions();
 
   const strongTopics = studentTopics.reduce(
     (total, subject) =>
@@ -254,10 +258,45 @@ export default function StudentDashboard() {
             <strong>{topic.score}%</strong>
             <p style={{ color: "#f59e0b", margin: "4px 0 0" }}>
               {topic.status}
+
+      <h2 style={{ marginTop: 28 }}>Learning Actions</h2>
+
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))",
+        gap: 16,
+        marginTop: 16,
+      }}>
+        {learningActions.map((insight) => (
+          <div
+            key={`${insight.subject}-${insight.topic}`}
+            style={{
+              background: "#fff",
+              padding: 18,
+              borderRadius: 12,
+              borderLeft: `4px solid ${insight.priority === "High" ? "#ef4444" : "#f59e0b"}`,
+            }}
+          >
+            <strong>{insight.topic}</strong>
+            <p style={{ color: "#64748b", margin: "6px 0" }}>
+              {insight.subject} • {insight.score}% • {insight.priority} Priority
             </p>
+            <p style={{ margin: "8px 0 12px" }}>{insight.message}</p>
+
+            {insight.actions.map((action) => (
+              <div
+                key={action}
+                style={{
+                  padding: "6px 0",
+                  color: "#475569",
+                  fontSize: 14,
+                }}
+              >
+                • {action}
+              </div>
+            ))}
           </div>
         ))}
-      </div>
       </div>
   );
 }
