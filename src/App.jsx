@@ -2,6 +2,7 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "./context/AuthContext";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import MasterAdminRoute from "./components/auth/MasterAdminRoute";
 
 import "./styles/students.css";
 import "./App.css";
@@ -14,6 +15,7 @@ import Attendance from "./pages/attendance/Attendance";
 import Fees from "./pages/fees/Fees";
 import Exams from "./pages/exams/Exams";
 import Settings from "./pages/settings/Settings";
+import MasterAdmin from "./pages/master/MasterAdmin";
 
 function Login() {
   const navigate = useNavigate();
@@ -26,7 +28,12 @@ function Login() {
     const ok = login(email, password);
 
     if (ok) {
-      navigate("/dashboard");
+      const savedUser = JSON.parse(localStorage.getItem("eduorbit-user"));
+      if (savedUser?.role === "master_admin") {
+        navigate("/master-admin", { replace: true });
+      } else {
+        navigate("/dashboard", { replace: true });
+      }
     } else {
       alert("Invalid Email or Password");
     }
@@ -67,6 +74,14 @@ export default function App() {
     <Routes>
 
       <Route path="/" element={<Login />} />
+      <Route
+        path="/master-admin"
+        element={
+          <MasterAdminRoute>
+            <MasterAdmin />
+          </MasterAdminRoute>
+        }
+      />
 
       <Route
         path="/dashboard"

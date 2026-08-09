@@ -1079,3 +1079,57 @@ body{
   }
 
 }
+
+html,
+body,
+#root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.dashboard,
+.main {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.main {
+  overflow-x: hidden;
+}
+
+.course-page,
+.attendance-page,
+.fees-page {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.course-table-wrapper,
+.attendance-table-wrapper,
+.fees-table-wrapper,
+.student-table-wrapper,
+.teacher-table-wrapper {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 768px) {
+  .main {
+    width: 100%;
+    padding: 16px;
+  }
+
+  .course-table-wrapper,
+  .attendance-table-wrapper,
+  .fees-table-wrapper,
+  .student-table-wrapper,
+  .teacher-table-wrapper {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+}
+

@@ -4,16 +4,43 @@ const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
 
   useEffect(() => {
-    const saved = localStorage.getItem("eduorbit-user");
+    try {
+      const saved = localStorage.getItem("eduorbit-user");
 
-    if (saved) {
-      setUser(JSON.parse(saved));
+      if (saved) {
+        setUser(JSON.parse(saved));
+      }
+    } catch {
+      localStorage.removeItem("eduorbit-user");
+      setUser(null);
+    } finally {
+      setAuthLoading(false);
     }
   }, []);
 
   function login(email, password) {
+    if (
+      email === "master@eduorbit.com" &&
+      password === "master123"
+    ) {
+      const master = {
+        name: "EduOrbit Master Admin",
+        email,
+        role: "master_admin",
+      };
+
+      localStorage.setItem(
+        "eduorbit-user",
+        JSON.stringify(master)
+      );
+
+      setUser(master);
+      return true;
+    }
+
     if (
       email === "admin@eduorbit.com" &&
       password === "admin123"
@@ -30,7 +57,6 @@ export function AuthProvider({ children }) {
       );
 
       setUser(admin);
-
       return true;
     }
 
@@ -48,6 +74,7 @@ export function AuthProvider({ children }) {
         user,
         login,
         logout,
+        authLoading,
       }}
     >
       {children}
