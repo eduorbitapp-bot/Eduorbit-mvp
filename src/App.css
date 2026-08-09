@@ -36,7 +36,7 @@
 
 body{
   font-family:Arial,sans-serif;
-  background:#0f172a;
+  background:#f4f7fb;
 }
 
 .login-page{
@@ -102,7 +102,7 @@ body{
 
 .sidebar{
   width:240px;
-  background:#0f172a;
+  background:#f4f7fb;
   color:#fff;
   padding:24px;
 }
@@ -342,7 +342,7 @@ body{
     width:280px !important;
     height:100vh !important;
     z-index:9999;
-    background:#0f172a;
+    background:#f4f7fb;
   }
 
   .mobile-sidebar .sidebar{
