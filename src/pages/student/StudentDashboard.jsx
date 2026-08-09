@@ -175,24 +175,45 @@ export default function StudentDashboard() {
           marginTop: 16,
         }}
       >
-        {studentProgress.subjects.map((subject) => (
+
+      <h2 style={{ marginTop: 28 }}>Topic Insights</h2>
+
+      {studentTopics.map((subject) => (
+        <div
+          key={subject.subject}
+          style={{
+            background: "#fff",
+            padding: 20,
+            borderRadius: 14,
+            marginTop: 16,
+          }}
+        >
+          <h3 style={{ marginBottom: 14 }}>{subject.subject}</h3>
+
           <div
-            key={subject.name}
             style={{
-              background: "#fff",
-              padding: 18,
-              borderRadius: 12,
-              boxShadow: "0 4px 14px rgba(0,0,0,.06)",
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))",
+              gap: 12,
             }}
           >
-            <strong>{subject.name}</strong>
-            <h2 style={{ margin: "10px 0 4px" }}>{subject.score}%</h2>
-            <p style={{ color: "#64748b", margin: 0 }}>
-              {subject.status}
-            </p>
+            {subject.topics.map((topic) => (
+              <div
+                key={topic.name}
+                style={{
+                  padding: 14,
+                  borderRadius: 10,
+                  background: "#f8fafc",
+                }}
+              >
+                <strong>{topic.name}</strong>
+                <h3 style={{ margin: "8px 0 4px" }}>{topic.score}%</h3>
+                <p style={{ color: "#64748b", margin: 0 }}>{topic.status}</p>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
     </div>
 
       <h2 style={{ marginTop: 28 }}>Recommended Practice</h2>
@@ -236,6 +257,7 @@ export default function StudentDashboard() {
             </p>
           </div>
         ))}
+      </div>
       </div>
   );
 }
